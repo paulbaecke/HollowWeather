@@ -1,0 +1,1715 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HollowMan.Core</name>
+    </assembly>
+    <members>
+        <member name="T:HollowMan.Core.DB.IWeatherLogger">
+            <summary>
+            Log the weather to somewhere permanent.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.DB.IWeatherLogger.Log(HollowMan.Core.IWeatherObservation)">
+            <summary>
+            Log an observation.
+            </summary>
+            <param name="observation">The observation to log.</param>
+        </member>
+        <member name="T:HollowMan.Core.DB.PrometheusLogger">
+            <summary>
+            Prometheus logger for weather.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.DB.PrometheusLogger.#ctor(HollowMan.Core.Logging.IEventLogger,System.String,System.String,System.Int32,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.DB.PrometheusLogger"/> class.
+            </summary>
+            <param name="logger">The logger to use.</param>
+            <param name="instancename">the name of the current instance.</param>
+            <param name="hostname">The Prometheus hostname.</param>
+            <param name="port">The port to use.</param>
+            <param name="url">The URL on the server to use.</param>
+        </member>
+        <member name="M:HollowMan.Core.DB.PrometheusLogger.Log(HollowMan.Core.IWeatherObservation)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HollowMan.Core.DB.SimpleSQLLogger">
+            <summary>
+            Logs to SQL.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.DB.SimpleSQLLogger.#ctor(HollowMan.Core.Logging.IEventLogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.DB.SimpleSQLLogger"/> class.
+            </summary>
+            <param name="logger">The logger to use.</param>
+        </member>
+        <member name="M:HollowMan.Core.DB.SimpleSQLLogger.Log(HollowMan.Core.IWeatherObservation)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HollowMan.Core.IWeatherObservation">
+            <summary>
+            Summary of current weather status.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.TimeStamp">
+            <summary>
+            Gets the observation timestamp.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.AbsoluteHumidity">
+            <summary>
+            Gets humidity in %age.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.ActualAltitude">
+            <summary>
+            Gets altitude as set.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.BarometricPressure">
+            <summary>
+            Gets calculated barometric pressure.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.CalculatedAltitude">
+            <summary>
+            Gets calculated altitude.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.CO2">
+            <summary>
+            Gets CO2.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.DewPoint">
+            <summary>
+            Gets calculated dewpoint.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.HeatIndex">
+            <summary>
+            Gets calculated heatindex.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.OverIcePressure">
+            <summary>
+            Gets calculated over ice pressure.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.OverWaterPressure">
+            <summary>
+            Gets calculatedo over water pressure.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.Pressure">
+            <summary>
+            Gets raw pressure.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.RelativeHumidity">
+            <summary>
+            Gets relative humidity.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.SealevelPressure">
+            <summary>
+            Gets sea level equivalent pressure.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.Temperature1">
+            <summary>
+            Gets temperature from first sensor.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.Temperature2">
+            <summary>
+            Gets temperature from second sensor.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.TVOC">
+            <summary>
+            Gets organic volatiles.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.UvA">
+            <summary>
+            Gets UVA.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.UvB">
+            <summary>
+            Gets UVB.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.UvI">
+            <summary>
+            Gets UVI.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.VapourPressure">
+            <summary>
+            Gets calculated vapour pressure.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.WindGust">
+            <summary>
+            Gets calculated wind gust.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.WindAverage">
+            <summary>
+            Gets average windspeed.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.IWeatherObservation.Precipitation">
+            <summary>
+            Gets the rainfall for the time period.
+            </summary>
+        </member>
+        <member name="T:HollowMan.Core.Logging.EventLogger">
+            <summary>
+            Wrapper around logger so we don't expose every class to logger extension.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Logging.EventLogger.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.Logging.EventLogger"/> class.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Logging.EventLogger.LogInformation(System.String,System.Object[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Logging.EventLogger.LogWeatherObservation(HollowMan.Core.SensorData.ISensorSample)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Logging.EventLogger.LogSystemStart(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Logging.EventLogger.LogSystemSuccess(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Logging.EventLogger.LogSystemError(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Logging.EventLogger.LogSystemWarning(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Logging.EventLogger.LogSensorStart(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Logging.EventLogger.LogSensorSuccess(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Logging.EventLogger.LogSensorError(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Logging.EventLogger.LogSensorWarning(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Logging.EventLogger.LogSensorMessage(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HollowMan.Core.Logging.IEventLogger">
+            <summary>
+            Logger interface.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Logging.IEventLogger.LogInformation(System.String,System.Object[])">
+            <summary>
+            Log an information event.
+            </summary>
+            <param name="message">The message to log.</param>
+            <param name="arguments">The arguments to pass in.</param>
+        </member>
+        <member name="M:HollowMan.Core.Logging.IEventLogger.LogWeatherObservation(HollowMan.Core.SensorData.ISensorSample)">
+            <summary>
+            Log an information event.
+            </summary>
+            <param name="sample">The weather sample to log.</param>
+        </member>
+        <member name="M:HollowMan.Core.Logging.IEventLogger.LogSystemStart(System.String)">
+            <summary>
+            Log a system level start message.
+            </summary>
+            <param name="message">The name of the subsystem.</param>
+        </member>
+        <member name="M:HollowMan.Core.Logging.IEventLogger.LogSystemSuccess(System.String)">
+            <summary>
+            Log a system level success message.
+            </summary>
+            <param name="message">The name of the subsystem.</param>
+        </member>
+        <member name="M:HollowMan.Core.Logging.IEventLogger.LogSystemError(System.String)">
+            <summary>
+            Log a system error message.
+            </summary>
+            <param name="message">The name of the subsystem.</param>
+        </member>
+        <member name="M:HollowMan.Core.Logging.IEventLogger.LogSystemWarning(System.String)">
+            <summary>
+            Log a system warning message.
+            </summary>
+            <param name="message">The name of the subsystem.</param>
+        </member>
+        <member name="M:HollowMan.Core.Logging.IEventLogger.LogSensorStart(System.String)">
+            <summary>
+            Log a sensor start message.
+            </summary>
+            <param name="sensorName">The sensor name.</param>
+        </member>
+        <member name="M:HollowMan.Core.Logging.IEventLogger.LogSensorSuccess(System.String)">
+            <summary>
+            Log a sensor success message.
+            </summary>
+            <param name="sensorName">The sensor name.</param>
+        </member>
+        <member name="M:HollowMan.Core.Logging.IEventLogger.LogSensorError(System.String,System.String)">
+            <summary>
+            Log a sensor error message.
+            </summary>
+            <param name="message">The name of the subsystem.</param>
+            <param name="sensorName">The sensor name.</param>
+        </member>
+        <member name="M:HollowMan.Core.Logging.IEventLogger.LogSensorWarning(System.String,System.String)">
+            <summary>
+            Log a sensor warning message.
+            </summary>
+            <param name="message">The name of the subsystem.</param>
+            <param name="sensorName">The sensor name.</param>
+        </member>
+        <member name="M:HollowMan.Core.Logging.IEventLogger.LogSensorMessage(System.String,System.String)">
+            <summary>
+            Log a sensor message.
+            </summary>
+            <param name="message">The name of the subsystem.</param>
+            <param name="sensorName">The sensor name.</param>
+        </member>
+        <member name="T:HollowMan.Core.SensorControllers.SensorController">
+            <summary>
+            Sensor controller calss to manage interop with I2c and GPIO.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.SensorControllers.SensorController.#ctor(HollowMan.Core.Logging.IEventLogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.SensorControllers.SensorController" /> class.
+            </summary>
+            <param name="logger">The event logger to us.</param>
+        </member>
+        <member name="M:HollowMan.Core.SensorControllers.SensorController.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:HollowMan.Core.SensorControllers.SensorController"/> class.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.SensorControllers.SensorController.GPIOController">
+            <summary>
+            Gets the GpioController for this device.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.SensorControllers.SensorController.Logger">
+            <summary>
+            Gets the logger.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.SensorControllers.SensorController.AddDevice(System.Byte)">
+            <summary>
+            Add an I2c Device for a byte address.
+            </summary>
+            <param name="address">The address to use.</param>
+        </member>
+        <member name="M:HollowMan.Core.SensorControllers.SensorController.GetI2CConnection(System.Byte)">
+            <summary>
+            Get the I2cDevice for the id.
+            </summary>
+            <param name="id">The id of the device.</param>
+            <returns>The I2c devic, or null.</returns>
+        </member>
+        <member name="M:HollowMan.Core.SensorControllers.SensorController.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.SensorControllers.SensorController.Dispose(System.Boolean)">
+            <summary>
+            Dispose of the underlying devices.
+            </summary>
+            <param name="disposing">Are we disposing now.</param>
+        </member>
+        <member name="T:HollowMan.Core.SensorData.IObservation">
+            <summary>
+            Represents a single observation.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.IObservation.Name">
+            <summary>
+            Gets the name to use for the observation.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.IObservation.ObservationType">
+            <summary>
+            Gets the observation type.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.IObservation.Observed">
+            <summary>
+            Gets the timestamp.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.IObservation.SensorType">
+            <summary>
+            Gets the sensor type used.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.IObservation.Value">
+            <summary>
+            Gets the value.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.IObservation.Units">
+            <summary>
+            Gets the units for the measurement.
+            </summary>
+        </member>
+        <member name="T:HollowMan.Core.SensorData.ISensorSample">
+            <summary>
+            ISensorSample is the core interface for reporting results
+            Each sensor can collect a series of observations on each poll
+            Some sensors need to be invoked by the sensor controller to take a reading,
+            others are interupt driven.
+            This is abstracted from the reporting components.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.ISensorSample.Diagnostics">
+            <summary>
+            Gets the diagnostics. Each reading/polling event may return additional diagnostic messages.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.ISensorSample.Observations">
+            <summary>
+            Gets the list of observations for the current reporting period/sample.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.ISensorSample.SensorName">
+            <summary>
+            Gets the sensor name.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.SensorData.ISensorSample.AddDiagnostic(System.String)">
+            <summary>
+            Add a diagnostic to the sample.
+            </summary>
+            <param name="message">The message string, should contain any debugging data/state messages from the underlying sensor.</param>
+        </member>
+        <member name="M:HollowMan.Core.SensorData.ISensorSample.AddFinalObservation(System.Double,System.String,HollowMan.Core.SensorData.ObservationUnits)">
+            <summary>
+            Add a final value that may be interesting to downstream reports.
+            </summary>
+            <param name="value">
+            Double representation of the metric. double is chosen as none of the underlying sensors available have
+            enough precision to warrant double.
+            </param>
+            <param name="name">The name of the observation.</param>
+            <param name="units">The units for the observation.</param>
+        </member>
+        <member name="M:HollowMan.Core.SensorData.ISensorSample.AddIntermediateObservation(System.Double,System.String,HollowMan.Core.SensorData.ObservationUnits)">
+            <summary>
+            Add intermediate state, which is likely only to be interesting for debugging purposes.
+            </summary>
+            <param name="value">
+            Double representation of the metric. double is chosen as none of the underlying sensors available have
+            enough precision to warrant double.
+            </param>
+            <param name="name">The name of the observation.</param>
+            <param name="units">The units for the observation.</param>
+        </member>
+        <member name="T:HollowMan.Core.SensorData.Observation">
+            <summary>
+            Represents an observation.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.SensorData.Observation.#ctor(System.Double,System.DateTime,System.String,HollowMan.Core.SensorData.ObservationUnits,HollowMan.Core.SensorData.ObservationType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.SensorData.Observation"/> class.
+            </summary>
+            <param name="value">The value to add.</param>
+            <param name="when">The sample timestamp.</param>
+            <param name="name">The name for the observation.</param>
+            <param name="units">The units the observation is in.</param>
+            <param name="observationType">The type of the observation.</param>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.Observation.Value">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.Observation.Observed">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.Observation.ObservationType">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.Observation.SensorType">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.Observation.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.Observation.Units">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.SensorData.Observation.GetStringFromUnit(HollowMan.Core.SensorData.ObservationUnits)">
+            <summary>
+            Helper class to human-friendly render units.
+            </summary>
+            <param name="unit">The observation unit.</param>
+            <returns>The human friendly string. Or empty string.</returns>
+        </member>
+        <member name="M:HollowMan.Core.SensorData.Observation.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:HollowMan.Core.SensorData.ObservationType">
+            <summary>
+            What kind of observation type is it.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.SensorData.ObservationType.RAW">
+            <summary>
+            Diagnostic.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.SensorData.ObservationType.CALIBRATED">
+            <summary>
+            Usable for reporting.
+            </summary>
+        </member>
+        <member name="T:HollowMan.Core.SensorData.ObservationUnits">
+            <summary>
+            Represents the observation units. So we can remember what we're measuring.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.SensorData.ObservationUnits.Default">
+            <summary>
+            Just a value.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.SensorData.ObservationUnits.KmPerHour">
+            <summary>
+            Km per hour.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.SensorData.ObservationUnits.DegreesCelcius">
+            <summary>
+            Degress celcius.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.SensorData.ObservationUnits.HectoPascal">
+            <summary>
+            HectoPascal.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.SensorData.ObservationUnits.Meters">
+            <summary>
+            Meters.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.SensorData.ObservationUnits.GramsPerCubicMeter">
+            <summary>
+            Grams per cubicm meter.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.SensorData.ObservationUnits.PartsPerMillion">
+            <summary>
+            Parts per million.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.SensorData.ObservationUnits.PartsPerBillion">
+            <summary>
+            Parts per billion.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.SensorData.ObservationUnits.Percentage">
+            <summary>
+            Percentage.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.SensorData.ObservationUnits.Millimeter">
+            <summary>
+            Millimeters.
+            </summary>
+        </member>
+        <member name="T:HollowMan.Core.SensorData.SensorSample">
+            <summary>
+            A sensor sample result.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.SensorData.SensorSample.sampleTime">
+            <summary>
+            The time the samples were taken.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.SensorData.SensorSample.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.SensorData.SensorSample"/> class.
+            </summary>
+            <param name="sensorName">The name of the sensor.</param>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.SensorSample.Observations">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.SensorSample.Diagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.SensorData.SensorSample.SensorName">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.SensorData.SensorSample.AddDiagnostic(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.SensorData.SensorSample.AddIntermediateObservation(System.Double,System.String,HollowMan.Core.SensorData.ObservationUnits)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.SensorData.SensorSample.AddFinalObservation(System.Double,System.String,HollowMan.Core.SensorData.ObservationUnits)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.Anemometer">
+            <summary>
+            A switch based anemometer implementation.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.Anemometer.#ctor(HollowMan.Core.SensorControllers.SensorController,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.Sensors.Drivers.Anemometer"/> class.
+            </summary>
+            <param name="controller">The GPIO controller.</param>
+            <param name="pin">The GPIO pin config.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.Anemometer.GetDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.Anemometer.Initialize">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.Anemometer.TakeReading(HollowMan.Core.WeatherObservation)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.BME280">
+            <summary>
+            My original implementation of the BME280 driver.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280.#ctor(HollowMan.Core.SensorControllers.SensorController,System.Double,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.Sensors.Drivers.BME280"/> class.
+            </summary>
+            <param name="controller">The sensor controller.</param>
+            <param name="altitudeInMeters">Altitude of location in meters. Used for corrections and calculating metrics.</param>
+            <param name="calibrationOffset">The overheating correction to use.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280.#ctor(HollowMan.Core.SensorControllers.SensorController,System.Double,System.Int32,System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.Sensors.Drivers.BME280"/> class.
+            </summary>
+            <param name="controller">The sensor controller.</param>
+            <param name="calibrationOffset">The overheating correction to use.</param>
+            <param name="altitudeInMeters">Altitude of location in meters. Used for corrections and calculating metrics.</param>
+            <param name="id">Override for I2c address.</param>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit">
+            <summary>
+            Represents sensor digits.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitT1">
+            <summary>
+            T1.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitT2">
+            <summary>
+            T2.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitT3">
+            <summary>
+            T3.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitP1">
+            <summary>
+            P1.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitP2">
+            <summary>
+            P2.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitP3">
+            <summary>
+            P3.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitP4">
+            <summary>
+            P4.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitP5">
+            <summary>
+            P5.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitP6">
+            <summary>
+            P6.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitP7">
+            <summary>
+            P7.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitP8">
+            <summary>
+            P8.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitP9">
+            <summary>
+            P9.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitH1">
+            <summary>
+            H1.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitH2">
+            <summary>
+            H2.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitH3">
+            <summary>
+            H3.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitH4">
+            <summary>
+            H4.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitH5">
+            <summary>
+            H5.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.BME280.SensorDigit.DigitH6">
+            <summary>
+            H6.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280.ExtractSensorData(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            Exctract data from raw byte response.
+            </summary>
+            <param name="cal1">First word.</param>
+            <param name="cal2">Second word.</param>
+            <param name="cal3">Third word.</param>
+            <returns>Sensor digit dictionary.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280.GetTempPart2(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Get the the temperature from the digits extracted.
+            </summary>
+            <param name="digitT1">T1.</param>
+            <param name="digitT3">T3.</param>
+            <param name="rawTemperature">Uncalibrated temperatrue.</param>
+            <returns>Temperature component.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280.GetTempPart1(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Get the the temperature from the digits extracted.
+            </summary>
+            <param name="digitT1">T1.</param>
+            <param name="digitT2">T2.</param>
+            <param name="rawTemperature">Uncalibrated temperatrue.</param>
+            <returns>Temperature component.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280.CalculateH4Offset(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Calculate H4 offset.
+            </summary>
+            <param name="bytes">Raw bytes.</param>
+            <param name="offset1">First offset.</param>
+            <param name="offset2">Second offset.</param>
+            <returns>H4 correction.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280.CalculateH5Offset(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Calculate H5 offset.
+            </summary>
+            <param name="bytes">Raw bytes.</param>
+            <param name="offset1">First offset.</param>
+            <param name="offset2">Second offset.</param>
+            <returns>H5 correction.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280.GetWaitTime">
+            <summary>
+            Calculate the wait time for readings. This helps with accuracy.
+            See Bosch BME280 spec.
+            </summary>
+            <returns>Calculated wait time.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280.Initialize">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280.GetDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280.TakeReading(HollowMan.Core.WeatherObservation)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280.GetControlCode">
+            <summary>
+            Get the control code from the settings.
+            </summary>
+            <returns>The control code to apply.</returns>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.BME280IoT">
+            <summary>
+            The new improved BME280IoT driver based on the Iot library.
+            BME280IoT provider temperature, humidity and pressure.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280IoT.#ctor(HollowMan.Core.SensorControllers.SensorController,System.Double,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.Sensors.Drivers.BME280IoT"/> class.
+            </summary>
+            <param name="controller">The sensor controller.</param>
+            <param name="calibrationOffset">The overheating correction to use.</param>
+            <param name="altitudeInMeters">Altitude of location in meters. Used for corrections and calculating metrics.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280IoT.#ctor(HollowMan.Core.SensorControllers.SensorController,System.Double,System.Int32,System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.Sensors.Drivers.BME280IoT"/> class.
+            </summary>
+            <param name="controller">The sensor controller.</param>
+            <param name="calibrationOffset">The overheating correction to use.</param>
+            <param name="altitudeInMeters">Altitude of location in meters. Used for corrections and calculating metrics.</param>
+            <param name="deviceId">Override the default device id.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280IoT.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:HollowMan.Core.Sensors.Drivers.BME280IoT"/> class.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280IoT.Initialize">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280IoT.GetDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280IoT.TakeReading(HollowMan.Core.WeatherObservation)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280IoT.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.BME280IoT.Dispose(System.Boolean)">
+            <summary>
+            Dispose.
+            </summary>
+            <param name="disposing">Currently disposing.</param>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.CCS811">
+            <summary>
+            CCS811 driver.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.CCS811.#ctor(HollowMan.Core.SensorControllers.SensorController,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.Sensors.Drivers.CCS811"/> class.
+            </summary>
+            <param name="controller">The sensor controller.</param>
+            <param name="warmupCount">number of warmup reading to do.</param>
+        </member>
+        <member name="P:HollowMan.Core.Sensors.Drivers.CCS811.Messages">
+            <summary>
+            Gets the list of messages.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.CCS811.GetDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.CCS811.Initialize">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.CCS811.TakeReading(HollowMan.Core.WeatherObservation)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.CCS811IoT">
+            <summary>
+            The new improved BME280IoT driver based on the Iot library.
+            BME280IoT provider temperature, humidity and pressure.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.CCS811IoT.#ctor(HollowMan.Core.SensorControllers.SensorController)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.Sensors.Drivers.CCS811IoT"/> class.
+            </summary>
+            <param name="controller">The sensor controller.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.CCS811IoT.#ctor(HollowMan.Core.SensorControllers.SensorController,System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.Sensors.Drivers.CCS811IoT"/> class.
+            </summary>
+            <param name="controller">The sensor controller.</param>
+            <param name="deviceId">Override the default device id.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.CCS811IoT.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:HollowMan.Core.Sensors.Drivers.CCS811IoT"/> class.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.Sensors.Drivers.CCS811IoT.Messages">
+            <summary>
+            Gets the list of messages.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.CCS811IoT.Initialize">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.CCS811IoT.GetDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.CCS811IoT.TakeReading(HollowMan.Core.WeatherObservation)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.CCS811IoT.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.CCS811IoT.Dispose(System.Boolean)">
+            <summary>
+            Dispose.
+            </summary>
+            <param name="disposing">Currently disposing.</param>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.DS18B20">
+            <summary>
+            DS18B20 Temperature probe driver.
+            This is GPIO based.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.DS18B20.#ctor(HollowMan.Core.SensorControllers.SensorController)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.Sensors.Drivers.DS18B20"/> class.
+            </summary>
+            <param name="controller">The sensor controller.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.DS18B20.GetDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.DS18B20.Initialize">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.DS18B20.TakeReading(HollowMan.Core.WeatherObservation)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.RainGauge">
+            <summary>
+            A switch based rainguage implementation.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.RainGauge.#ctor(HollowMan.Core.SensorControllers.SensorController,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.Sensors.Drivers.RainGauge"/> class.
+            </summary>
+            <param name="controller">The GPIO controller.</param>
+            <param name="pin">The GPIO pin config.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.RainGauge.GetDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.RainGauge.Initialize">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.RainGauge.TakeReading(HollowMan.Core.WeatherObservation)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.VEML6075">
+            <summary>
+            VEML6075 driver for volatikes.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075.#ctor(HollowMan.Core.SensorControllers.SensorController)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.Sensors.Drivers.VEML6075"/> class.
+            </summary>
+            <param name="controller">The sensor controller.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075.GetDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075.Initialize">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075.TakeReading(HollowMan.Core.WeatherObservation)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075.Dispose(System.Boolean)">
+            <summary>
+            Dispose of the underlying resources.
+            </summary>
+            <param name="disposing">Are we currently disposing.</param>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.VEML6075Async">
+            <summary>
+            Driver for VEML6075 (async).
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.#ctor(HollowMan.Core.Sensors.Sensor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.Sensors.Drivers.VEML6075Async"/> class.
+            </summary>
+            <param name="sensor">the sensor to use.</param>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.VEML6075Async.IntegrationTime">
+            <summary>
+            From spec doc.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.VEML6075Async.IntegrationTime.IT050ms">
+            <summary>
+            Timer 50ms
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.VEML6075Async.IntegrationTime.IT100ms">
+            <summary>
+            Timer 100ms
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.VEML6075Async.IntegrationTime.IT200ms">
+            <summary>
+            Timer 200ms
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.VEML6075Async.IntegrationTime.IT400ms">
+            <summary>
+            Timer 400ms
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.VEML6075Async.IntegrationTime.IT800ms">
+            <summary>
+            Timer 800ms
+            </summary>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.VEML6075Async.DynamicSetting">
+            <summary>
+            From spec doc.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.VEML6075Async.DynamicSetting.Normal">
+            <summary>
+            Normal dynamics.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.VEML6075Async.DynamicSetting.High">
+            <summary>
+            High dynamics.
+            </summary>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.VEML6075Async.Trigger">
+            <summary>
+            From spec doc.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.VEML6075Async.Trigger.NoActiveForceTrigger">
+            <summary>
+            Don't force trigger.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.VEML6075Async.Trigger.TriggerOneMeasurement">
+            <summary>
+            Force trigger.
+            </summary>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.VEML6075Async.ActiveForceMode">
+            <summary>
+            From spec doc.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.VEML6075Async.ActiveForceMode.NormalMode">
+            <summary>
+            Normal mode.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.VEML6075Async.ActiveForceMode.ActiveForceMode">
+            <summary>
+            Active force mode.
+            </summary>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Drivers.VEML6075Async.VEMLPowerMode">
+            <summary>
+            From spec doc.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.VEML6075Async.VEMLPowerMode.PowerOn">
+            <summary>
+            Power on.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.Drivers.VEML6075Async.VEMLPowerMode.ShutDown">
+            <summary>
+            Shut down please.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.Config(HollowMan.Core.Sensors.Drivers.VEML6075Async.IntegrationTime,HollowMan.Core.Sensors.Drivers.VEML6075Async.DynamicSetting,HollowMan.Core.Sensors.Drivers.VEML6075Async.Trigger,HollowMan.Core.Sensors.Drivers.VEML6075Async.ActiveForceMode,HollowMan.Core.Sensors.Drivers.VEML6075Async.VEMLPowerMode)">
+            <summary>
+            Configures the VEML6075 sensor. Verifies if the settings are stored.
+            </summary>
+            <param name="uVIT">UV integration time.</param>
+            <param name="hD">Dynamic setting.</param>
+            <param name="uVTRIG">Measurement trigger.</param>
+            <param name="uVAF">Active force mode.</param>
+            <param name="sD">Power mode.</param>
+            <returns>True if settings are stored. False if not.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.ReadRAWUVA">
+            <summary>
+            Reads RAW UVA.
+            </summary>
+            <returns>RAW UVA Value.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.ReadRAWUVB">
+            <summary>
+            Reads RAW UVB.
+            </summary>
+            <returns>RAW UVB Value.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.ReadRAWUVD">
+            <summary>
+            Reads RAW UVD.
+            </summary>
+            <returns>RAW UVD Value.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.ReadRAWUVCOMP1">
+            <summary>
+            Reads Noise Compensation Channel 1 data which allows only visible noise to pass through.
+            </summary>
+            <returns>UV Comp 1 Value.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.ReadRAWUVCOMP2">
+            <summary>
+            Reads Noise Compensation Channel 2 data which allows only infrared noise to pass through.
+            </summary>
+            <returns>UV Comp 2 Value.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.CalculateCompensatedUVA">
+            <summary>
+            Calculates Compensated UVA.
+            </summary>
+            <returns>UVA Comp Value.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.CalculateCompensatedUVB">
+            <summary>
+            Calculates Compensated UVB.
+            </summary>
+            <returns>UVB Comp Value.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.CalculateUVIndexA">
+            <summary>
+            Calculates the UV Index A.
+            </summary>
+            <returns>UV Index A Value.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.CalculateUVIndexB">
+            <summary>
+            Calculates the UV Index B.
+            </summary>
+            <returns>UV Index B Value.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.CalculateAverageUVIndex">
+            <summary>
+            Calculates the Average UV Index.
+            </summary>
+            <returns>Average UV Index Value.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.Dispose(System.Boolean)">
+            <summary>
+            Dispose.
+            </summary>
+            <param name="disposing">Are we disposing.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.Initialize">
+            <summary>
+            Initiates the sensor.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.ReadRegisterTwoBytes(System.Byte)">
+            <summary>
+            Reads data from the I2C device.
+            </summary>
+            <param name="reg">Read address.</param>
+            <returns>Register data.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Drivers.VEML6075Async.ReadRegisterTwoBytesArray(System.Byte)">
+            <summary>
+            Reads data from the I2C device.
+            </summary>
+            <param name="reg">Read address.</param>
+            <returns>Register data.</returns>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.ISensor">
+            <summary>
+            Sensor interface.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.Sensors.ISensor.Device">
+            <summary>
+            Gets the underlying I2c device.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.Sensors.ISensor.DeviceId">
+            <summary>
+            Gets the devuce id.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.Sensors.ISensor.IsInitialized">
+            <summary>
+            Gets a value indicating whether the device is initialized.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.Sensors.ISensor.SensorName">
+            <summary>
+            Gets the sensor name.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.Sensors.ISensor.Controller">
+            <summary>
+            Gets the sensor controller.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.ISensor.GetDiagnostics">
+            <summary>
+            Gets the diagnostic information for console debugging.
+            </summary>
+            <returns>Current diagnostic state as string.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.ISensor.Initialize">
+            <summary>
+            Intialize the device.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.ISensor.TakeReading(HollowMan.Core.WeatherObservation)">
+            <summary>
+            Take a sensor reading.
+            </summary>
+            <param name="observation">The observation to update.</param>
+            <returns>A sensor sample for the current state.</returns>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.Sensor">
+            <summary>
+            Base class for sensors.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.Sensors.Sensor.DeviceId">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.Sensors.Sensor.Device">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.Sensors.Sensor.Controller">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.Sensors.Sensor.IsInitialized">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.Sensors.Sensor.SensorName">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.ConvertToInt24LittleEndian(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Conver a byte buffer to an int.
+            </summary>
+            <param name="buffer">The data to write.</param>
+            <returns>An int.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.WriteByte(HollowMan.Core.Sensors.SensorRegister,System.Byte)">
+            <summary>
+            Write a byte to the specified register.
+            </summary>
+            <param name="register">The register.</param>
+            <param name="data">The data to write.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.WriteByte(System.Byte,System.Byte)">
+            <summary>
+            Write a byte to the specified register.
+            </summary>
+            <param name="register">The register id.</param>
+            <param name="data">The data to write.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.WriteBytes(System.Byte,System.Byte[])">
+            <summary>
+            Write data to the specified register.
+            </summary>
+            <param name="register">The register.</param>
+            <param name="data">The byte array of data to write.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.ReadInt24(HollowMan.Core.Sensors.SensorRegister)">
+            <summary>
+            Read int from register.
+            </summary>
+            <param name="register">The register.</param>
+            <returns>An int.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.ReadInt24(System.Byte)">
+            <summary>
+            Read int from register.
+            </summary>
+            <param name="register">The register.</param>
+            <returns>An int.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.ReadInt16(HollowMan.Core.Sensors.SensorRegister)">
+            <summary>
+            Read int from register.
+            </summary>
+            <param name="register">The register.</param>
+            <returns>An int.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.ReadInt16(System.Byte)">
+            <summary>
+            Read int from register.
+            </summary>
+            <param name="register">The register.</param>
+            <returns>An int.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.Read(HollowMan.Core.Sensors.SensorRegister,System.Span{System.Byte})">
+            <summary>
+            Read int from register.
+            </summary>
+            <param name="register">The register.</param>
+            <param name="buffer">the buffer to read.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.Read(System.Byte,System.Span{System.Byte})">
+            <summary>
+            Read int from register.
+            </summary>
+            <param name="register">The register.</param>
+            <param name="buffer">the buffer to read.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.ReadRaw(System.Byte,System.Span{System.Byte})">
+            <summary>
+            Read raw from register.
+            </summary>
+            <param name="register">The register.</param>
+            <param name="buffer">the buffer to read.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.Read(HollowMan.Core.Sensors.SensorRegister)">
+            <summary>
+            Read raw from register.
+            </summary>
+            <param name="register">The register.</param>
+            <returns>A single byte.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.ReadBytes(System.Byte,System.Int32)">
+            <summary>
+            Read raw from register.
+            </summary>
+            <param name="register">The register.</param>
+            <param name="length">the buffer lenth to read.</param>
+            <returns>A byte array.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.Read(System.Byte)">
+            <summary>
+            Read raw from register.
+            </summary>
+            <param name="register">The register.</param>
+            <returns>A single byte.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.ReadRawByte(System.Byte)">
+            <summary>
+            Read raw from register.
+            </summary>
+            <param name="register">The register.</param>
+            <returns>A single byte.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.ReadRawBytes(System.Byte,System.Int32)">
+            <summary>
+            Read raw from register.
+            </summary>
+            <param name="register">The register.</param>
+            <param name="length">The length of the buffer.</param>
+            <returns>A byte array.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.LogStartInitialization">
+            <summary>
+            Log start initialization.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.LogStartSuccess">
+            <summary>
+            Log start success.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.LogError(System.String)">
+            <summary>
+            Log error.
+            </summary>
+            <param name="message">The message to log.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.LogWarning(System.String)">
+            <summary>
+            Log warning.
+            </summary>
+            <param name="message">The message to log.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.LogMessage(System.String)">
+            <summary>
+            Log warning.
+            </summary>
+            <param name="message">The message to log.</param>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.LogTakeReadingComplete">
+            <summary>
+            Log reading success.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.LogTakeReadingStart">
+            <summary>
+            Log start reading.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.GetDiagnostics">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.Initialize">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.Sensors.Sensor.TakeReading(HollowMan.Core.WeatherObservation)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HollowMan.Core.Sensors.SensorRegister">
+            <summary>
+            Register definitions.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.SensorRegister.IODIR">
+            <summary>
+            Controls the direction of the data I/O.
+            When a bit is set, the corresponding pin becomes an input.
+            When a bit is clear, the corresponding pin becomes an output.
+            </summary>
+            <remarks>
+            On reset/power on all bits are set (all pins are input).
+            </remarks>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.SensorRegister.IPOL">
+            <summary>
+            Configures the polarity on the corresponding GPIO port bits.
+            When a bit is set, the corresponding GPIO register bit will reflect the inverted value on the pin.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.SensorRegister.GPINTEN">
+            <summary>
+            Controls the interrupt-on-change feature for each pin.
+            When a bit is set, the corresponding pin is enabled for interrupt-on-change.
+            The DEFVAL and INTCON registers must also be configured if any pins are enabled for interrupt-on-change.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.SensorRegister.DEFVAL">
+            <summary>
+            Configures the default comparison value.
+            If enabled (via GPINTEN and INTCON) to compare against the DEFVAL register,
+            an opposite value on the associated pin will cause an interrupt to occur.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.SensorRegister.INTCON">
+            <summary>
+            Controls how the associated pin value is compared for the interrupt-on-change feature.
+            When a bit is set, the corresponding I/O pin is compared against the associated bit in the DEFVAL register.
+            When a bit value is clear, the corresponding I/O pin is compared against the previous value.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.SensorRegister.IOCON">
+            <summary>
+            Contains several bits for configuring the device.  See respective datasheet for more details.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.SensorRegister.GPPU">
+            <summary>
+            Controls the pull-up resistors for the port pins.
+            When a bit is set and the corresponding pin is configured as an input,
+            the corresponding port pin is internally pulled up with a 100 kΩ resistor.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.SensorRegister.INTF">
+            <summary>
+            Reflects the interrupt condition on the port pins of any pin that is enabled for interrupts via the GPINTEN register.
+            A 'set' bit indicates that the associated pin caused the interrupt.
+            This register is read-only. Writes to this register will be ignored.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.SensorRegister.INTCAP">
+            <summary>
+            The INTCAP register captures the GPIO port value at the time the interrupt occurred.
+            The register is read-only and is updated only when an interrupt occurs.
+            The register will remain unchanged until the interrupt is cleared via a read of INTCAP or GPIO.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.SensorRegister.GPIO">
+            <summary>
+            Reflects the value on the port. Reading from this register reads the port.
+            Writing to this register modifies the Output Latch (OLAT) register.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Sensors.SensorRegister.OLAT">
+            <summary>
+            Provides access to the output latches.
+            A read from this register results in a read of the OLAT and not the port itself.
+            A write to this register modifies the output latches that modify the pins configured as outputs.
+            </summary>
+            <remarks>
+            On reset/power on all bits are not set (all pins are low).
+            </remarks>
+        </member>
+        <member name="T:HollowMan.Core.Shared.ByteOperations">
+            <summary>
+            This class contains common byte operations.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Shared.ByteOperations.GetUShort(System.Byte[],System.Int32)">
+            <summary>
+            Get an unsigned short from byte array.
+            </summary>
+            <param name="bytes">The byte array.</param>
+            <param name="index">The index.</param>
+            <returns>An unsigned short.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Shared.ByteOperations.GetShort(System.Byte[],System.Int32)">
+            <summary>
+            Get a short from byte array.
+            </summary>
+            <param name="bytes">The byte array.</param>
+            <param name="index">The index.</param>
+            <returns>An short.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Shared.ByteOperations.GetChar(System.Byte[],System.Int32)">
+            <summary>
+            Get a character from byte array.
+            </summary>
+            <param name="bytes">The byte array.</param>
+            <param name="index">The index.</param>
+            <returns>A character.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Shared.ByteOperations.GetChar(System.Byte)">
+            <summary>
+            Get an character from byte.
+            </summary>
+            <param name="data">The byte.</param>
+            <returns>A character.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Shared.ByteOperations.GetUChar(System.Byte[],System.Int32)">
+            <summary>
+            Get an character from byte array.
+            </summary>
+            <param name="bytes">The byte array.</param>
+            <param name="index">The index.</param>
+            <returns>A character.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Shared.ByteOperations.GetUChar(System.Byte)">
+            <summary>
+            Get an character from byte.
+            </summary>
+            <param name="data">The byte.</param>
+            <returns>A character.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Shared.ByteOperations.PrintByteArray(System.Byte[])">
+            <summary>
+            Prints a byte array as a string for debugging.
+            </summary>
+            <param name="bytes">Byte array.</param>
+            <returns>A string for the byte array.</returns>
+        </member>
+        <member name="T:HollowMan.Core.Shared.InterlockedCounter">
+            <summary>
+            Interlocked counter.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.Shared.InterlockedCounter.Increment">
+            <summary>
+            Increment the counter.
+            </summary>
+            <returns>The incremented count.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Shared.InterlockedCounter.GetValue">
+            <summary>
+            Gets the current value.
+            </summary>
+            <returns>The current value.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Shared.InterlockedCounter.GetAndReset">
+            <summary>
+            Read and reset.
+            </summary>
+            <returns>The current value.</returns>
+        </member>
+        <member name="M:HollowMan.Core.Shared.InterlockedCounter.Reset">
+            <summary>
+            Set counter to zero.
+            </summary>
+        </member>
+        <member name="T:HollowMan.Core.Shared.SensorType">
+            <summary>
+            What kind of sensor is it.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Shared.SensorType.UNKNOWN">
+            <summary>
+            Default type.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Shared.SensorType.TEMPERATURE">
+            <summary>
+            Temperature sensor.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Shared.SensorType.HUMIDITY">
+            <summary>
+            Humidity sensor.
+            </summary>
+        </member>
+        <member name="F:HollowMan.Core.Shared.SensorType.PRESSURE">
+            <summary>
+            Pressure sensor.
+            </summary>
+        </member>
+        <member name="T:HollowMan.Core.WeatherManager">
+            <summary>
+            Config driven sensor manager.
+            Work in progress.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.WeatherManager.#ctor(System.Int32,System.Int32,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.WeatherManager"/> class.
+            </summary>
+            <param name="intervalInSeconds">Polling interval in seconds.</param>
+            <param name="altitudeInMeters">Altitude of location in meters. Used for corrections and calculating metrics.</param>
+            <param name="correctionFactor">Correction factor for BME280 chip if needed.</param>
+        </member>
+        <member name="M:HollowMan.Core.WeatherManager.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:HollowMan.Core.WeatherManager"/> class.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.WeatherManager.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:HollowMan.Core.WeatherManager.StartObserving">
+            <summary>
+            Start observing weather.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.WeatherManager.Stop">
+            <summary>
+            Stop observing.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.WeatherManager.TryGetObservation(HollowMan.Core.IWeatherObservation@)">
+            <summary>
+            Try to take an observation from all sensors.
+            Cannot execute only one instance of this.
+            </summary>
+            <param name="observation">The current weather state.</param>
+            <returns>True if successfull.</returns>
+        </member>
+        <member name="M:HollowMan.Core.WeatherManager.Dispose(System.Boolean)">
+            <summary>
+            Dispose.
+            </summary>
+            <param name="disposing">Currently disposing.</param>
+        </member>
+        <member name="T:HollowMan.Core.WeatherObservation">
+            <summary>
+            Represents a weather observation taken from sensor readings.
+            </summary>
+        </member>
+        <member name="M:HollowMan.Core.WeatherObservation.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:HollowMan.Core.WeatherObservation"/> class.
+            </summary>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.Temperature1">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.Temperature2">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.UvA">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.UvB">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.UvI">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.TVOC">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.CO2">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.Pressure">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.BarometricPressure">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.SealevelPressure">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.OverIcePressure">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.OverWaterPressure">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.RelativeHumidity">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.AbsoluteHumidity">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.VapourPressure">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.CalculatedAltitude">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.ActualAltitude">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.HeatIndex">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.DewPoint">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.WindGust">
+            <inheritdoc />
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.WindAverage">
+            <inheritdoc />
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.TimeStamp">
+            <inheritdoc/>
+        </member>
+        <member name="P:HollowMan.Core.WeatherObservation.Precipitation">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
