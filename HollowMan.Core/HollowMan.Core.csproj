@@ -8,10 +8,31 @@
     <AnalysisLevel>latest</AnalysisLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>D:\src\HollowMan\HollowMan.Core\HollowMan.Core.xml</DocumentationFile>
+    <Authors>Paul Baecke</Authors>
+    <Company>Paul Baecke</Company>
+    <Product>HollowMan.Core .NET Core Weather Statio</Product>
+    <Description>Prototype .NET Core weather station inspired by
+    https://projects.raspberrypi.org/en/projects/build-your-own-weather-station
+    With a rough and ready Prometheus pusher.
+    
+    Depens on pre-release Iot.Device.Bindings.
+    </Description>
+    <Version>0.0.1-pre</Version>
+    <Copyright>(c) 2020 Paul Baecke</Copyright>
+    <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <AssemblyVersion>0.0.1.0</AssemblyVersion>
+    <FileVersion>0.0.1.0</FileVersion>
+    <PackageReleaseNotes>v0.1 Alpha - initial version (lacking unit test coverage)</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="stylecop.json" />
+    <None Include="license.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
