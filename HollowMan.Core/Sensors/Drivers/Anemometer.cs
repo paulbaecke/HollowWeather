@@ -83,11 +83,11 @@ namespace HollowMan.Core.Sensors.Drivers
             sensorResult.AddFinalObservation(average, "WIND_AVERAGE", ObservationUnits.KmPerHour);
 
             observation.WindAverage = average;
-            observation.WindGust = this.maxGust;
+            observation.WindGust = this.maxGust != 1 ? this.maxGust : average;
 
             this.startTime = obsTime;
             this.gustCount.Reset();
-            this.maxGust = 0;
+            this.maxGust = -1;
 
             this.LogTakeReadingComplete();
 

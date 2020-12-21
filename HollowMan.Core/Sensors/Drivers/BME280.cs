@@ -390,16 +390,17 @@ namespace HollowMan.Core.Sensors.Drivers
 
             var pressure = new Pressure(pressureValue, UnitsNet.Units.PressureUnit.Hectopascal);
             var humidity = new RelativeHumidity(humidityValue, UnitsNet.Units.RelativeHumidityUnit.Percent);
+            var humidityRatio = new Ratio(humidityValue, UnitsNet.Units.RatioUnit.Percent);
             var temperature = new Temperature(rawTemperature, UnitsNet.Units.TemperatureUnit.DegreeCelsius);
 
             var actualAltitude = new Length(this.altitudeInMeters, UnitsNet.Units.LengthUnit.Meter);
             var altitudeCalculated = WeatherHelper.CalculateAltitude(pressure);
 
-            double absHumidity = WeatherHelper.CalculateAbsoluteHumidity(temperature, humidity).GramsPerCubicMeter;
-            double dewPoint = WeatherHelper.CalculateDewPoint(temperature, humidity).DegreesCelsius;
-            double heatIndex = WeatherHelper.CalculateHeatIndex(temperature, humidity).DegreesCelsius;
-            double vapourPressure = WeatherHelper.CalculateActualVaporPressure(temperature, humidity).Hectopascals;
-            double barometricPressure = WeatherHelper.CalculateBarometricPressure(pressure, temperature, actualAltitude, humidity).Hectopascals;
+            double absHumidity = WeatherHelper.CalculateAbsoluteHumidity(temperature, humidityRatio).GramsPerCubicMeter;
+            double dewPoint = WeatherHelper.CalculateDewPoint(temperature, humidityRatio).DegreesCelsius;
+            double heatIndex = WeatherHelper.CalculateHeatIndex(temperature, humidityRatio).DegreesCelsius;
+            double vapourPressure = WeatherHelper.CalculateActualVaporPressure(temperature, humidityRatio).Hectopascals;
+            double barometricPressure = WeatherHelper.CalculateBarometricPressure(pressure, temperature, actualAltitude, humidityRatio).Hectopascals;
             double vapourPressureOverIce = WeatherHelper.CalculateSaturatedVaporPressureOverIce(temperature).Hectopascals;
             double vapourPressureOverWater = WeatherHelper.CalculateSaturatedVaporPressureOverWater(temperature).Hectopascals;
             double seaLevelPressure = WeatherHelper.CalculateSeaLevelPressure(pressure, actualAltitude, temperature).Hectopascals;
@@ -443,12 +444,6 @@ namespace HollowMan.Core.Sensors.Drivers
         private static int GetControlCode()
         {
             return OVERSAMPLETEMP << 5 | OVERSAMPLEPRES << 2 | MODE;
-        }
-
-        private ushort GetByteValueAsUShort(byte register)
-        {
-            var readBuffer = this.ReadBytes(register, 2);
-            return (ushort)((readBuffer[1] << 8) + readBuffer[0]);
         }
     }
 }
