@@ -16,14 +16,13 @@ namespace HollowMan.Core.Sensors.Drivers
     public class Anemometer : Sensor
     {
         private const int GUSTLENGTHINSEC = 5;
-        private const double CIRCUMFERENCE = 9.0 / 1000.0;
+        private const double RADIUSINCM = 9.0;
         private const double CALIB = 2.36;
-
+        private readonly double circumference;
         private readonly int pin;
         private readonly GpioController gpioController;
-        private readonly InterlockedCounter countSinceLastRead = new InterlockedCounter();
-        private readonly InterlockedCounter gustCount = new InterlockedCounter();
-
+        private int countSinceLastRead;
+        private int gustCount;
         private DateTime startTime;
         private DateTime lastObservation;
 
@@ -44,6 +43,7 @@ namespace HollowMan.Core.Sensors.Drivers
             this.gpioController.OpenPin(pin);
             this.gpioController.SetPinMode(pin, PinMode.InputPullUp);
             this.gpioController.RegisterCallbackForPinValueChangedEvent(this.pin, PinEventTypes.Rising, this.HandleCount);
+            this.circumference = (2 * Math.PI * RADIUSINCM) / 100000;
             this.IsInitialized = true;
 
             // Register the startup time
@@ -74,19 +74,20 @@ namespace HollowMan.Core.Sensors.Drivers
             var sensorResult = new SensorSample(this.SensorName);
             var obsTime = DateTime.Now;
             double elapsedSinceReading = (obsTime - this.startTime).TotalSeconds;
-            int count = this.countSinceLastRead.GetAndReset();
+            int count = this.countSinceLastRead;
+            this.countSinceLastRead = 0;
             this.LogMessage($"Elapsed: {elapsedSinceReading}");
             this.LogMessage($"Tick Count: {count}");
-            double average = CalculateSpeed(count, elapsedSinceReading);
+            double average = this.CalculateSpeed(count, elapsedSinceReading);
 
             sensorResult.AddFinalObservation(this.maxGust, "WIND_GUST", ObservationUnits.KmPerHour);
             sensorResult.AddFinalObservation(average, "WIND_AVERAGE", ObservationUnits.KmPerHour);
 
             observation.WindAverage = average;
-            observation.WindGust = this.maxGust != 1 ? this.maxGust : average;
+            observation.WindGust = this.maxGust != -1 ? this.maxGust : average;
 
             this.startTime = obsTime;
-            this.gustCount.Reset();
+            this.gustCount = 0;
             this.maxGust = -1;
 
             this.LogTakeReadingComplete();
@@ -94,29 +95,31 @@ namespace HollowMan.Core.Sensors.Drivers
             return sensorResult;
         }
 
-        private static double CalculateSpeed(int count, double timeInSeconds)
+        private double CalculateSpeed(int count, double timeInSeconds)
         {
             double rotations = count / 2.0;
-            double distance = (CIRCUMFERENCE * rotations) / timeInSeconds;
-            double speed = distance * 3600.0;
-            return speed * CALIB;
+            double distanceInKm = this.circumference * rotations;
+            double kmPerSecond = distanceInKm / timeInSeconds;
+            double kmPerHour = kmPerSecond * 3600;
+            return kmPerHour * CALIB;
         }
 
         private void HandleCount(object sender, PinValueChangedEventArgs pinValueChangedEventArgs)
         {
             var obsTime = DateTime.Now;
-            this.countSinceLastRead.Increment();
+            this.countSinceLastRead++;
             double gustElapsed = (obsTime - this.lastObservation).TotalSeconds;
             if (gustElapsed >= GUSTLENGTHINSEC)
             {
                 // calculate gust
-                this.gustCount.Increment();
-                this.maxGust = Math.Max(this.maxGust, CalculateSpeed(this.gustCount.GetAndReset(), gustElapsed));
+                int count = this.gustCount;
+                this.gustCount = 0;
+                this.maxGust = Math.Max(this.maxGust, this.CalculateSpeed(count, gustElapsed));
                 this.lastObservation = obsTime;
-                this.gustCount.Reset();
+                this.gustCount = 0;
             }
 
-            this.gustCount.Increment();
+            this.gustCount++;
         }
     }
 }

@@ -7,12 +7,12 @@ namespace HollowMan.Core
     using System;
     using System.Collections.Generic;
     using System.Threading;
-    using System.Timers;
     using HollowMan.Core.DB;
     using HollowMan.Core.Logging;
     using HollowMan.Core.SensorControllers;
     using HollowMan.Core.Sensors;
     using HollowMan.Core.Sensors.Drivers;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// Config driven sensor manager.
@@ -26,20 +26,23 @@ namespace HollowMan.Core
         private readonly int altitudeInMeters;
         private readonly double correctionFactor;
         private readonly EventLogger logger;
+        private readonly object monitorlock;
         private bool isDisposed;
         private IList<IWeatherLogger> weatherLoggers;
-        private bool isRunning;
+        private Timer timer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WeatherManager"/> class.
         /// </summary>
+        /// <param name="logger">The logger to use.</param>
         /// <param name="intervalInSeconds">Polling interval in seconds.</param>
         /// <param name="altitudeInMeters">Altitude of location in meters. Used for corrections and calculating metrics.</param>
         /// <param name="correctionFactor">Correction factor for BME280 chip if needed.</param>
-        public WeatherManager(int intervalInSeconds, int altitudeInMeters, double correctionFactor = 0)
+        public WeatherManager(ILogger logger, int intervalInSeconds, int altitudeInMeters, double correctionFactor = 0)
         {
+            this.monitorlock = new object();
             this.interval = intervalInSeconds;
-            this.logger = new EventLogger();
+            this.logger = new EventLogger(logger);
             this.altitudeInMeters = altitudeInMeters;
             this.correctionFactor = correctionFactor;
 
@@ -73,19 +76,7 @@ namespace HollowMan.Core
         /// </summary>
         public void StartObserving()
         {
-            this.isRunning = true;
-            while (this.isRunning)
-            {
-                if (this.TryGetObservation(out IWeatherObservation observation))
-                {
-                    foreach (var weatherlogger in this.weatherLoggers)
-                    {
-                        weatherlogger.Log(observation);
-                    }
-                }
-
-                Thread.Sleep(this.interval * 1000);
-            }
+            this.timer = new Timer(new TimerCallback(this.TryGetObservation), null, 1000, this.interval * 1000);
         }
 
         /// <summary>
@@ -93,38 +84,8 @@ namespace HollowMan.Core
         /// </summary>
         public void Stop()
         {
-            this.isRunning = false;
-        }
-
-        /// <summary>
-        /// Try to take an observation from all sensors.
-        /// Cannot execute only one instance of this.
-        /// </summary>
-        /// <param name="observation">The current weather state.</param>
-        /// <returns>True if successfull.</returns>
-        public bool TryGetObservation(out IWeatherObservation observation)
-        {
-            observation = null;
-
-            try
-            {
-                this.logger.LogSystemStart("Taking readings.");
-                observation = new WeatherObservation();
-
-                foreach (var sensor in this.activeSensors)
-                {
-                    var data = sensor.TakeReading(observation as WeatherObservation);
-                    this.logger.LogWeatherObservation(data);
-                }
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogSystemError(ex.ToString());
-                return false;
-            }
-
-            this.logger.LogSystemSuccess("Taking readings.");
-            return true;
+            this.timer.Dispose();
+            this.timer = null;
         }
 
         /// <summary>
@@ -140,6 +101,8 @@ namespace HollowMan.Core
 
             if (disposing)
             {
+                this.timer?.Dispose();
+
                 foreach (var sensor in this.activeSensors)
                 {
                     if (sensor is IDisposable disposable)
@@ -152,6 +115,45 @@ namespace HollowMan.Core
             }
 
             this.isDisposed = true;
+        }
+
+        /// <summary>
+        /// Try to take an observation from all sensors.
+        /// Cannot execute only one instance of this.
+        /// </summary>
+        /// <param name="state">Timer state object.</param>
+        private void TryGetObservation(object state)
+        {
+            GC.KeepAlive(this.timer);
+
+            if (Monitor.TryEnter(this.monitorlock))
+            {
+                try
+                {
+                    this.logger.LogSystemStart("Taking readings.");
+                    IWeatherObservation observation = new WeatherObservation();
+                    foreach (var sensor in this.activeSensors)
+                    {
+                        var data = sensor.TakeReading(observation as WeatherObservation);
+                        this.logger.LogWeatherObservation(data);
+                    }
+
+                    foreach (var weatherlogger in this.weatherLoggers)
+                    {
+                        weatherlogger.Log(observation);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.logger.LogSystemError(ex.ToString());
+                }
+                finally
+                {
+                    Monitor.Exit(this.monitorlock);
+                }
+            }
+
+            this.logger.LogSystemSuccess("Taking readings.");
         }
 
         private void RegisterI2cAddresses()
@@ -180,6 +182,7 @@ namespace HollowMan.Core
             this.activeSensors.Add(new DS18B20(controller));
             this.activeSensors.Add(new Anemometer(controller, 5));
             this.activeSensors.Add(new RainGauge(controller, 6));
+            this.activeSensors.Add(new Windvane(controller, 0, 3.3, 5100));
             this.logger.LogSystemSuccess("Adding sensors");
         }
 
@@ -201,6 +204,7 @@ namespace HollowMan.Core
             // this needs to move to config
             this.weatherLoggers = new List<IWeatherLogger>
             {
+                new SimpleSQLLogger(this.logger, 5),
                 new PrometheusLogger(this.logger,  "192.168.1.152", "http://192.168.1.128"),
             };
 

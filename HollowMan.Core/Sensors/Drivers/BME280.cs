@@ -4,9 +4,7 @@
 
 namespace HollowMan.Core.Sensors.Drivers
 {
-    using System;
     using System.Collections.Generic;
-    using System.Device.I2c;
     using System.Text;
     using System.Threading;
     using HollowMan.Core.SensorControllers;
@@ -169,9 +167,9 @@ namespace HollowMan.Core.Sensors.Drivers
         /// <param name="cal2">Second word.</param>
         /// <param name="cal3">Third word.</param>
         /// <returns>Sensor digit dictionary.</returns>
-        public static Dictionary<SensorDigit, int> ExtractSensorData(byte[] cal1, byte[] cal2, byte[] cal3)
+        public static Dictionary<SensorDigit, int> ExtractcalibrationData(byte[] cal1, byte[] cal2, byte[] cal3)
         {
-            var sensorData = new Dictionary<SensorDigit, int>(18)
+            var calibrationData = new Dictionary<SensorDigit, int>(18)
             {
                 { SensorDigit.DigitT1, ByteOperations.GetUShort(cal1, 0) },
                 { SensorDigit.DigitT2, ByteOperations.GetShort(cal1, 2) },
@@ -193,32 +191,7 @@ namespace HollowMan.Core.Sensors.Drivers
                 { SensorDigit.DigitH6, ByteOperations.GetChar(cal3, 6) },
             };
 
-            return sensorData;
-        }
-
-        /// <summary>
-        /// Get the the temperature from the digits extracted.
-        /// </summary>
-        /// <param name="digitT1">T1.</param>
-        /// <param name="digitT3">T3.</param>
-        /// <param name="rawTemperature">Uncalibrated temperatrue.</param>
-        /// <returns>Temperature component.</returns>
-        public static int GetTempPart2(int digitT1, int digitT3, int rawTemperature)
-        {
-            return (((((rawTemperature >> 4) - digitT1) * ((rawTemperature >> 4) - digitT1)) >> 12) * digitT3) >> 14;
-        }
-
-        /// <summary>
-        /// Get the the temperature from the digits extracted.
-        /// </summary>
-        /// <param name="digitT1">T1.</param>
-        /// <param name="digitT2">T2.</param>
-        /// <param name="rawTemperature">Uncalibrated temperatrue.</param>
-        /// <returns>Temperature component.</returns>
-        public static int GetTempPart1(int digitT1, int digitT2, int rawTemperature)
-        {
-            // Adjust temperature based on calibration
-            return (((rawTemperature >> 3) - (digitT1 << 1)) * digitT2) >> 11;
+            return calibrationData;
         }
 
         /// <summary>
@@ -257,6 +230,81 @@ namespace HollowMan.Core.Sensors.Drivers
         public static double GetWaitTime()
         {
             return 1.25 + (2.3 * OVERSAMPLETEMP) + ((2.3 * OVERSAMPLEPRES) + 0.575) + ((2.3 * OVERSAMPLEHUM) + 0.575);
+        }
+
+        /// <summary>
+        /// Calculates the corrected temperature.
+        /// </summary>
+        /// <param name="sensorResult">The sensor result to update.</param>
+        /// <param name="calibrationData">Calibration data from calibration registers.</param>
+        /// <param name="rawTemp">Raw temperature read from register.</param>
+        /// <param name="tFine">The correction temperature.</param>
+        /// <returns>The temperature.</returns>
+        public static double CalculateTemperature(SensorSample sensorResult, Dictionary<SensorDigit, int> calibrationData, int rawTemp, out double tFine)
+        {
+            sensorResult.AddIntermediateObservation(rawTemp, "RAW TEMPERATURE", ObservationUnits.DegreesCelcius);
+            var tempPart1 = ((rawTemp / 16384.0d) - (calibrationData[SensorDigit.DigitT1] / 1024.0d)) * calibrationData[SensorDigit.DigitT2];
+
+            var tempPart2 = ((rawTemp / 131072.0d) - (calibrationData[SensorDigit.DigitT1] / 8192.0))
+                * ((rawTemp / 131072.0d) - (calibrationData[SensorDigit.DigitT1] / 8192.0d))
+                * calibrationData[SensorDigit.DigitT3];
+
+            sensorResult.AddDiagnostic($"var1: {tempPart1}");
+            sensorResult.AddDiagnostic($"var2: {tempPart2}");
+
+            tFine = tempPart1 + tempPart2;
+            sensorResult.AddDiagnostic($"tfine: {tFine}");
+
+            double finalTemp = (tempPart1 + tempPart2) / 5120d;
+            sensorResult.AddDiagnostic(string.Format("finaltemp: {0}", finalTemp));
+            return finalTemp;
+        }
+
+        /// <summary>
+        /// Calculates the corrected humidity.
+        /// </summary>
+        /// <param name="sensorResult">The sensor result to update.</param>
+        /// <param name="calibrationData">Calibration data from calibration registers.</param>
+        /// <param name="rawHumidity">Raw bytes read from register.</param>
+        /// <param name="tFine">The correction temperature.</param>
+        /// <returns>The humidity.</returns>
+        public static double CalculateHumidity(SensorSample sensorResult, Dictionary<SensorDigit, int> calibrationData, int rawHumidity, double tFine)
+        {
+            sensorResult.AddIntermediateObservation(rawHumidity, "RAW HUMIDITY", ObservationUnits.Percentage);
+            double humidity = tFine - 76800.0d;
+            humidity = (rawHumidity - ((calibrationData[SensorDigit.DigitH4] * 64.0) + (calibrationData[SensorDigit.DigitH5] / 16384.0 * humidity)))
+                                      * (calibrationData[SensorDigit.DigitH2] / 65536.0 * (1.0 + (calibrationData[SensorDigit.DigitH6] / 67108864.0 * humidity
+                                      * (1.0 + (calibrationData[SensorDigit.DigitH3] / 67108864.0 * humidity)))));
+            humidity *= 1.0 - (calibrationData[SensorDigit.DigitH2] * humidity / 524288.0);
+            return humidity;
+        }
+
+        /// <summary>
+        /// Calculates the corrected pressure.
+        /// </summary>
+        /// <param name="sensorResult">The sensor result to update.</param>
+        /// <param name="calibrationData">Calibration data from calibration registers.</param>
+        /// <param name="rawPressure">Raw bytes read from register.</param>
+        /// <param name="tFine">The correction temperature.</param>
+        /// <returns>The pressure.</returns>
+        public static double CalculatePressure(SensorSample sensorResult, Dictionary<SensorDigit, int> calibrationData, int rawPressure, double tFine)
+        {
+            sensorResult.AddIntermediateObservation(rawPressure, "RAW PRESSURE", ObservationUnits.HectoPascal);
+
+            double var1 = ((double)tFine / 2.0) - 64000.0;
+            double var2 = var1 * var1 * calibrationData[SensorDigit.DigitP6] / 32768.0;
+            var2 += var1 * calibrationData[SensorDigit.DigitP5] * 2.0;
+            var2 = (var2 / 4.0) + (calibrationData[SensorDigit.DigitP4] * 65536.0);
+            var1 = ((calibrationData[SensorDigit.DigitP3] * var1 * var1 / 524288.0) + (calibrationData[SensorDigit.DigitP2] * var1)) / 524288.0;
+            var1 = (1.0 + (var1 / 32768.0)) * calibrationData[SensorDigit.DigitP1];
+            double pressure = 1048576.0 - (double)rawPressure;
+            pressure = (pressure - (var2 / 4096.0)) * 6250.0 / var1;
+            var1 = calibrationData[SensorDigit.DigitP9] * pressure * pressure / 2147483648.0;
+            var2 = pressure * calibrationData[SensorDigit.DigitP8] / 32768.0;
+            pressure += (var1 + var2 + calibrationData[SensorDigit.DigitP7]) / 16.0;
+
+            // Convert to hectopascal
+            return pressure / 100d;
         }
 
         /// <inheritdoc/>
@@ -305,7 +353,7 @@ namespace HollowMan.Core.Sensors.Drivers
             sensorResult.AddDiagnostic(ByteOperations.PrintByteArray(cal2));
             sensorResult.AddDiagnostic(ByteOperations.PrintByteArray(cal3));
 
-            var sensorData = ExtractSensorData(cal1, cal2, cal3);
+            var calibrationData = ExtractcalibrationData(cal1, cal2, cal3);
 
             // Pause per spec
             var wait_time = GetWaitTime();
@@ -317,90 +365,33 @@ namespace HollowMan.Core.Sensors.Drivers
             sensorResult.AddDiagnostic("Raw data");
             sensorResult.AddDiagnostic(ByteOperations.PrintByteArray(data));
 
-            var pres_raw = (data[0] << 12) | (data[1] << 4) | (data[2] >> 4);
-            var temp_raw = (data[3] << 12) | (data[4] << 4) | (data[5] >> 4);
-            var hum_raw = (data[6] << 8) | data[7];
-
-            sensorResult.AddDiagnostic("Raw readings");
-            sensorResult.AddDiagnostic($"{pres_raw}:{temp_raw}:{hum_raw}");
-
-            sensorResult.AddIntermediateObservation(temp_raw, "RAW TEMPERATURE", ObservationUnits.DegreesCelcius);
-            sensorResult.AddIntermediateObservation(pres_raw, "RAW PRESSURE", ObservationUnits.HectoPascal);
-            sensorResult.AddIntermediateObservation(hum_raw, "RAW HUMIDITY", ObservationUnits.Percentage);
-            int tempPart1 = GetTempPart1(sensorData[SensorDigit.DigitT1], sensorData[SensorDigit.DigitT2], temp_raw);
-            var tempPart2 = GetTempPart2(sensorData[SensorDigit.DigitT1], sensorData[SensorDigit.DigitT3], temp_raw);
-            sensorResult.AddDiagnostic($"var1: {tempPart1}");
-            sensorResult.AddDiagnostic($"var2: {tempPart2}");
-
-            var t_fine = tempPart1 + tempPart2;
-            sensorResult.AddDiagnostic($"tfine: {t_fine}");
-
-            int finalTemp = ((t_fine * 5) + 128) >> 8;
-            sensorResult.AddDiagnostic(string.Format("finaltemp: {0}", finalTemp));
-
-            double temperatureValue = finalTemp / 100.0f;
-            double rawTemperature = temperatureValue;
+            var rawTemp = (data[3] << 12) | (data[4] << 4) | (data[5] >> 4);
+            double rawTemperature = CalculateTemperature(sensorResult, calibrationData, rawTemp, out double tFine);
 
             // Refine pressure and adjust for temperature
-            float varHum1 = (t_fine / 2.0f) - 64000.0f;
-            float varHum2 = varHum1 * varHum1 * sensorData[SensorDigit.DigitP6] / 32768.0f;
-            varHum2 += varHum1 * sensorData[SensorDigit.DigitP5] * 2.0f;
-            varHum2 = (varHum2 / 4.0f) + (sensorData[SensorDigit.DigitP4] * 65536.0f);
-            varHum1 = ((sensorData[SensorDigit.DigitP3] * varHum1 * varHum1 / 524288.0f) + (sensorData[SensorDigit.DigitP2] * varHum1)) / 524288.0f;
-            varHum1 = (1.0f + (varHum1 / 32768.0f)) * sensorData[SensorDigit.DigitP1];
-
-            double pressureValue;
-            if (varHum1 == 0)
-            {
-                pressureValue = 0;
-            }
-            else
-            {
-                pressureValue = 1048576.0f - pres_raw;
-                pressureValue = ((pressureValue - (varHum2 / 4096.0f)) * 6250.0f) / varHum1;
-                var k = sensorData[SensorDigit.DigitP9] * pressureValue * pressureValue / 2147483648.0f;
-                var l = pressureValue * sensorData[SensorDigit.DigitP8] / 32768.0f;
-                pressureValue += (k + l + sensorData[SensorDigit.DigitP7]) / 16.0f;
-                pressureValue /= 100;
-            }
+            var rawPressure = (data[0] << 12) | (data[1] << 4) | (data[2] >> 4);
+            double pressureValue = CalculatePressure(sensorResult, calibrationData, rawPressure, tFine);
 
             // Refine humidity
-            double humidityValue = t_fine - 76800.0f;
-            humidityValue = (hum_raw - ((sensorData[SensorDigit.DigitH4] * 64.0f) +
-                       ((sensorData[SensorDigit.DigitH5] / 16384.0f) * humidityValue))) *
-                       ((sensorData[SensorDigit.DigitH2] / 65536.0f) *
-                       (1.0f + ((sensorData[SensorDigit.DigitH6] / 67108864.0f) * humidityValue *
-                       (1.0f + ((sensorData[SensorDigit.DigitH3] / 67108864.0f) * humidityValue)))));
+            var rawHumidity = (data[6] << 8) | data[7];
+            double humidityValue = CalculateHumidity(sensorResult, calibrationData, rawHumidity, tFine);
 
-            humidityValue *= 1.0f - (sensorData[SensorDigit.DigitH1] * humidityValue / 524288.0f);
-
-            if (humidityValue > 100)
-            {
-                humidityValue = 100;
-            }
-
-            if (humidityValue < 0)
-            {
-                humidityValue = 0;
-            }
-
-            sensorResult.AddFinalObservation(temperatureValue + this.calibrationOffset, "TEMPERATURE", ObservationUnits.DegreesCelcius);
+            sensorResult.AddFinalObservation(rawTemperature + this.calibrationOffset, "TEMPERATURE", ObservationUnits.DegreesCelcius);
             sensorResult.AddFinalObservation(pressureValue, "PRESSURE", ObservationUnits.HectoPascal);
             sensorResult.AddFinalObservation(humidityValue, "HUMIDITY", ObservationUnits.Percentage);
 
             var pressure = new Pressure(pressureValue, UnitsNet.Units.PressureUnit.Hectopascal);
             var humidity = new RelativeHumidity(humidityValue, UnitsNet.Units.RelativeHumidityUnit.Percent);
-            var humidityRatio = new Ratio(humidityValue, UnitsNet.Units.RatioUnit.Percent);
             var temperature = new Temperature(rawTemperature, UnitsNet.Units.TemperatureUnit.DegreeCelsius);
 
             var actualAltitude = new Length(this.altitudeInMeters, UnitsNet.Units.LengthUnit.Meter);
             var altitudeCalculated = WeatherHelper.CalculateAltitude(pressure);
 
-            double absHumidity = WeatherHelper.CalculateAbsoluteHumidity(temperature, humidityRatio).GramsPerCubicMeter;
-            double dewPoint = WeatherHelper.CalculateDewPoint(temperature, humidityRatio).DegreesCelsius;
-            double heatIndex = WeatherHelper.CalculateHeatIndex(temperature, humidityRatio).DegreesCelsius;
-            double vapourPressure = WeatherHelper.CalculateActualVaporPressure(temperature, humidityRatio).Hectopascals;
-            double barometricPressure = WeatherHelper.CalculateBarometricPressure(pressure, temperature, actualAltitude, humidityRatio).Hectopascals;
+            double absHumidity = WeatherHelper.CalculateAbsoluteHumidity(temperature, humidity).GramsPerCubicMeter;
+            double dewPoint = WeatherHelper.CalculateDewPoint(temperature, humidity).DegreesCelsius;
+            double heatIndex = WeatherHelper.CalculateHeatIndex(temperature, humidity).DegreesCelsius;
+            double vapourPressure = WeatherHelper.CalculateActualVaporPressure(temperature, humidity).Hectopascals;
+            double barometricPressure = WeatherHelper.CalculateBarometricPressure(pressure, temperature, actualAltitude, humidity).Hectopascals;
             double vapourPressureOverIce = WeatherHelper.CalculateSaturatedVaporPressureOverIce(temperature).Hectopascals;
             double vapourPressureOverWater = WeatherHelper.CalculateSaturatedVaporPressureOverWater(temperature).Hectopascals;
             double seaLevelPressure = WeatherHelper.CalculateSeaLevelPressure(pressure, actualAltitude, temperature).Hectopascals;

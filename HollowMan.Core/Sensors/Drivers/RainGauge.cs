@@ -58,7 +58,7 @@ namespace HollowMan.Core.Sensors.Drivers
             this.LogTakeReadingStart();
             var sensorResult = new SensorSample(this.SensorName);
             int count = this.tipCount.GetAndReset();
-            this.LogMessage($"Tick Count: {count}");
+            this.LogMessage($"rain:tick: {count}");
             sensorResult.AddFinalObservation(count * BUCKETSIZE, "PRECIPITATION", ObservationUnits.Millimeter);
             observation.Precipitation = count * BUCKETSIZE;
             this.LogTakeReadingComplete();

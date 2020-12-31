@@ -40,6 +40,7 @@ namespace HollowMan.Core.DB
                 "DewPoint",
                 "WindGust",
                 "WindAverage",
+                "WindDirection",
                 "Precipitation",
             };
 
@@ -121,6 +122,8 @@ namespace HollowMan.Core.DB
                     return observation.WindGust;
                 case "WindAverage":
                     return observation.WindAverage;
+                case "WindDirection":
+                    return observation.WindDirection;
                 case "Precipitation":
                     return observation.Precipitation;
                 default:
