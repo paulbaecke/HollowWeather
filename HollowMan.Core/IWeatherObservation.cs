@@ -125,5 +125,10 @@ namespace HollowMan.Core
         /// Gets the rainfall for the time period.
         /// </summary>
         double Precipitation { get; }
+
+        /// <summary>
+        /// Gets the wind direction.
+        /// </summary>
+        double WindDirection { get; }
     }
 }

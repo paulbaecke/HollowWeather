@@ -1,0 +1,18 @@
+﻿[Unit]  
+Description=HollowMan weather daemon for Pi  
+
+[Service]  
+Type=notify
+ExecStart=/sbin/HollowWeather/HollowWeather.App
+WorkingDirectory=/etc/HollowWeather/publish/  
+
+Restart=always
+RestartSec=5 
+
+SyslogIdentifier=dotnet-hollowweather-service  
+
+User=pi
+Environment=DOTNET_ROOT=/opt/dotnet 
+
+[Install]  
+WantedBy=multi-user.target

@@ -82,6 +82,9 @@ namespace HollowMan.Core
         /// <inheritdoc />
         public double WindAverage { get; internal set; }
 
+        /// <inheritdoc />
+        public double WindDirection { get; internal set; }
+
         /// <inheritdoc/>
         public DateTime TimeStamp { get; private set; }
 
